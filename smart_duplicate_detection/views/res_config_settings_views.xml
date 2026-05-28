@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+
+    <record id="res_config_settings_view_form_duplicate_detection"
+            model="ir.ui.view">
+
+        <field name="name">
+            res.config.settings.view.form.duplicate.detection
+        </field>
+
+        <field name="model">res.config.settings</field>
+
+        <field name="inherit_id"
+               ref="base_setup.res_config_settings_view_form"/>
+
+        <field name="arch"
+               type="xml">
+
+            <xpath expr="//form"
+                   position="inside">
+
+                <app string="Smart Duplicate Detection"
+                     name="smart_duplicate_detection">
+
+                    <block title="Contact Duplicate Checks">
+
+                        <setting string="Email Check">
+                            <field name="enable_email_check"/>
+                        </setting>
+
+                        <setting string="Mobile Check">
+                            <field name="enable_mobile_check"/>
+                        </setting>
+
+                        <setting string="Phone Check">
+                            <field name="enable_phone_check"/>
+                        </setting>
+
+                    </block>
+
+                    <block title="Product Duplicate Checks">
+
+                        <setting string="Barcode Check">
+                            <field name="enable_barcode_check"/>
+                        </setting>
+
+                        <setting string="Internal Reference Check">
+                            <field name="enable_internal_ref_check"/>
+                        </setting>
+
+                    </block>
+
+                    <block title="General Settings">
+
+                        <setting string="Ignore Archived Records">
+                            <field name="ignore_archived_records"/>
+                        </setting>
+
+                        <setting string="Warning Only Mode">
+                            <field name="warning_only_mode"/>
+                        </setting>
+
+                    </block>
+
+                </app>
+
+            </xpath>
+
+        </field>
+
+    </record>
+
+</odoo>
