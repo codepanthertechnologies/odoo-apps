@@ -28,6 +28,9 @@ Features:
     "license": "LGPL-3",
     "author": "Code Panther Technologies",
     "website": "https://codepanther.netlify.app",
+    "images": [
+        "static/description/banner.png",
+    ],
     "depends": [
         "base",
         "contacts",
