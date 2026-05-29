@@ -14,11 +14,9 @@
         <field name="inherit_id"
                ref="base.view_partner_form"/>
 
-        <field name="arch"
-               type="xml">
+        <field name="arch" type="xml">
 
-            <field name="email"
-                   position="attributes">
+            <field name="email" position="attributes">
                 <attribute name="placeholder">
                     Duplicate detection enabled
                 </attribute>
