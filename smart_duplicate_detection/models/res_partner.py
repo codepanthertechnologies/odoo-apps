@@ -1,11 +1,9 @@
 from odoo import api, models
+from .duplicate_mixin import DuplicateDetectionMixin
 
 
-class ResPartner(models.Model):
-    _inherit = [
-        "res.partner",
-        "duplicate.detection.mixin",
-    ]
+class ResPartner(DuplicateDetectionMixin, models.Model):
+    _inherit = "res.partner"
 
     @api.onchange("email", "mobile", "phone")
     def _onchange_duplicate_contact(self):
@@ -15,51 +13,80 @@ class ResPartner(models.Model):
             "smart_duplicate_detection.ignore_archived_records",
             False,
         )
+        warning_only = self._get_config_param(
+            "smart_duplicate_detection.warning_only_mode",
+            True,
+        )
+        active_test = not ignore_archived
 
-        email = getattr(self, "email", False)
-        mobile = getattr(self, "mobile", False)
-        phone = getattr(self, "phone", False)
-
-        checks = [
-            (
-                "email",
-                "smart_duplicate_detection.enable_email_check",
-                self._normalize_email(email),
-                "Email",
-            ),
-            (
-                "mobile",
-                "smart_duplicate_detection.enable_mobile_check",
-                self._normalize_phone(mobile),
-                "Mobile",
-            ),
-            (
-                "phone",
-                "smart_duplicate_detection.enable_phone_check",
-                self._normalize_phone(phone),
-                "Phone",
-            ),
-        ]
-
-        for field_name, config_key, value, label in checks:
-            enabled = self._get_config_param(config_key, True)
-
-            if not enabled or not value:
-                continue
-
-            duplicate = self._find_duplicate(
+        # --- Email ---
+        if self._get_config_param(
+            "smart_duplicate_detection.enable_email_check", True
+        ) and self.email:
+            dup = self._find_duplicate_email(
                 model_name="res.partner",
-                field_name=field_name,
-                value=value,
+                field_name="email",
+                raw_value=self.email,
                 current_id=self.id,
-                active_test=not ignore_archived,
+                active_test=active_test,
             )
-
-            if duplicate:
-                return self._warning_message(
-                    title="Duplicate Contact Detected",
-                    message=(
-                        f"A contact with the same {label} "
-                        f"already exists: {duplicate.display_name}"
-                    ),
+            if dup:
+                msg = (
+                    f"A contact with the same Email already exists: "
+                    f"{dup.display_name}"
                 )
+                if warning_only:
+                    return self._warning_message(
+                        "Duplicate Contact Detected", msg
+                    )
+                else:
+                    from odoo.exceptions import ValidationError
+                    raise ValidationError(msg)
+
+        # --- Mobile ---
+        if self._get_config_param(
+            "smart_duplicate_detection.enable_mobile_check", True
+        ) and self.mobile:
+            dup = self._find_duplicate_phone(
+                model_name="res.partner",
+                field_name="mobile",
+                raw_value=self.mobile,
+                current_id=self.id,
+                active_test=active_test,
+            )
+            if dup:
+                msg = (
+                    f"A contact with the same Mobile already exists: "
+                    f"{dup.display_name}"
+                )
+                if warning_only:
+                    return self._warning_message(
+                        "Duplicate Contact Detected", msg
+                    )
+                else:
+                    from odoo.exceptions import ValidationError
+                    raise ValidationError(msg)
+
+        # --- Phone ---
+        if self._get_config_param(
+            "smart_duplicate_detection.enable_phone_check", True
+        ) and self.phone:
+            dup = self._find_duplicate_phone(
+                model_name="res.partner",
+                field_name="phone",
+                raw_value=self.phone,
+                current_id=self.id,
+                active_test=active_test,
+            )
+            if dup:
+                msg = (
+                    f"A contact with the same Phone already exists: "
+                    f"{dup.display_name}"
+                )
+                if warning_only:
+                    return self._warning_message(
+                        "Duplicate Contact Detected", msg
+                    )
+                else:
+                    from odoo.exceptions import ValidationError
+                    raise ValidationError(msg)
