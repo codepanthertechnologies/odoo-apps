@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+
+    <record id="res_config_settings_view_form_duplicate_detection"
+            model="ir.ui.view">
+
+        <field name="name">
+            res.config.settings.view.form.duplicate.detection
+        </field>
+
+        <field name="model">res.config.settings</field>
+
+        <!-- Odoo 16: use base.res_config_settings_view_form -->
+        <field name="inherit_id"
+               ref="base.res_config_settings_view_form"/>
+
+        <field name="arch" type="xml">
+
+            <!-- Odoo 16 anchor: div[hasclass('settings')] -->
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+
+                <div class="app_settings_block"
+                     data-string="Smart Duplicate Detection"
+                     string="Smart Duplicate Detection"
+                     data-key="smart_duplicate_detection">
+
+                    <h2>Contact Duplicate Checks</h2>
+                    <div class="row mt16 o_settings_container">
+
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="enable_email_check"
+                                       string="Email Check"/>
+                                <div class="text-muted">
+                                    Warn when a contact with the same email already exists
+                                </div>
+                                <div class="content-group mt16">
+                                    <field name="enable_email_check"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="enable_mobile_check"
+                                       string="Mobile Check"/>
+                                <div class="text-muted">
+                                    Warn when a contact with the same mobile already exists
+                                </div>
+                                <div class="content-group mt16">
+                                    <field name="enable_mobile_check"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="enable_phone_check"
+                                       string="Phone Check"/>
+                                <div class="text-muted">
+                                    Warn when a contact with the same phone already exists
+                                </div>
+                                <div class="content-group mt16">
+                                    <field name="enable_phone_check"/>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <h2>Product Duplicate Checks</h2>
+                    <div class="row mt16 o_settings_container">
+
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="enable_barcode_check"
+                                       string="Barcode Check"/>
+                                <div class="text-muted">
+                                    Warn when a product with the same barcode already exists
+                                </div>
+                                <div class="content-group mt16">
+                                    <field name="enable_barcode_check"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="enable_internal_ref_check"
+                                       string="Internal Reference Check"/>
+                                <div class="text-muted">
+                                    Warn when a product with the same internal reference already exists
+                                </div>
+                                <div class="content-group mt16">
+                                    <field name="enable_internal_ref_check"/>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <h2>General Settings</h2>
+                    <div class="row mt16 o_settings_container">
+
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="ignore_archived_records"
+                                       string="Ignore Archived Records"/>
+                                <div class="text-muted">
+                                    Skip archived contacts and products during duplicate checks
+                                </div>
+                                <div class="content-group mt16">
+                                    <field name="ignore_archived_records"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="warning_only_mode"
+                                       string="Warning Only Mode"/>
+                                <div class="text-muted">
+                                    Show a warning but allow saving. Disable to block saving on duplicates.
+                                </div>
+                                <div class="content-group mt16">
+                                    <field name="warning_only_mode"/>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </xpath>
+
+        </field>
+
+    </record>
+
+</odoo>
