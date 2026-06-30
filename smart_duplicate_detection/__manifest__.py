@@ -36,6 +36,8 @@ Features:
         "contacts",
         "product",
     ],
+    "price":1,
+    "currency":"INR",
     "data": [
         "views/res_partner_views.xml",
         "views/product_template_views.xml",
