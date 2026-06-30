@@ -31,8 +31,6 @@ Features:
     "images": [
         "static/description/banner.png",
     ],
-    "currency": "USD",
-    "price":2.99,
     "depends": [
         "base",
         "contacts",
