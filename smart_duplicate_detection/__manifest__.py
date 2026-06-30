@@ -37,7 +37,7 @@ Features:
         "product",
     ],
     "price":1,
-    "currency":"INR",
+    "currency":"USD",
     "data": [
         "views/res_partner_views.xml",
         "views/product_template_views.xml",
