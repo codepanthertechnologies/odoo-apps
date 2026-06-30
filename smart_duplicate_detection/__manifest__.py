@@ -27,10 +27,12 @@ Features:
     "category": "Tools",
     "license": "LGPL-3",
     "author": "Code Panther Technologies",
-    "website": "https://codepanther.netlify.app",
+    "website": "https://codepanther.online",
     "images": [
         "static/description/banner.png",
     ],
+    "currency": "USD",
+    "price":2.99,
     "depends": [
         "base",
         "contacts",
