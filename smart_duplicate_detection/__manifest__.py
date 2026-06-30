@@ -27,7 +27,7 @@ Features:
     "category": "Tools",
     "license": "LGPL-3",
     "author": "Code Panther Technologies",
-    "website": "https://codepanther.netlify.app",
+    "website": "https://codepanther.online",
     "images": [
         "static/description/banner.png",
     ],
