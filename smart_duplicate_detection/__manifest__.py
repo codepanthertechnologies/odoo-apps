@@ -36,8 +36,6 @@ Features:
         "contacts",
         "product",
     ],
-    "price":1,
-    "currency":"USD",
     "data": [
         "views/res_partner_views.xml",
         "views/product_template_views.xml",
