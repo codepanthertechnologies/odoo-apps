@@ -1,5 +1,4 @@
 import re
-
 from odoo import api, models
 
 
@@ -123,3 +122,4 @@ class DuplicateDetectionMixin(models.AbstractModel):
                 "message": message,
             }
         }
+        

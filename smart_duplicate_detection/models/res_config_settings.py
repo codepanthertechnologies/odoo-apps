@@ -52,3 +52,4 @@ class ResConfigSettings(models.TransientModel):
             "smart_duplicate_detection.warning_only_mode"
         ),
     )
+    

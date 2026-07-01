@@ -6,127 +6,63 @@ from .duplicate_mixin import DuplicateDetectionMixin
 class ResPartner(DuplicateDetectionMixin, models.Model):
     _inherit = "res.partner"
 
-    @api.onchange("email", "mobile", "phone")
-    def _onchange_duplicate_contact(self):
-        """Live UI warning only — does not block saving."""
-        self.ensure_one()
+    def _duplicate_checks(self):
+        return [
+            ("enable_email_check", "email", "Email", self._find_duplicate_email),
+            ("enable_mobile_check", "mobile", "Mobile", self._find_duplicate_phone),
+            ("enable_phone_check", "phone", "Phone", self._find_duplicate_phone),
+        ]
+
+    def _get_duplicate_message(self, flag, field_name, label, finder):
+        raw_value = self[field_name]
+        if not raw_value:
+            return None
+        if not self._get_config_param(
+            f"smart_duplicate_detection.{flag}", True
+        ):
+            return None
         ignore_archived = self._get_config_param(
             "smart_duplicate_detection.ignore_archived_records", False
         )
-        active_test = not ignore_archived
+        dup = finder(
+            model_name="res.partner",
+            field_name=field_name,
+            raw_value=raw_value,
+            current_id=self.id,
+            active_test=not ignore_archived,
+        )
+        if not dup:
+            return None
+        return (
+            f"A contact with the same {label} already exists: "
+            f"{dup.display_name}"
+        )
 
-        if (
-            self._get_config_param("smart_duplicate_detection.enable_email_check", True)
-            and self.email
-        ):
-            dup = self._find_duplicate_email(
-                model_name="res.partner",
-                field_name="email",
-                raw_value=self.email,
-                current_id=self.id,
-                active_test=active_test,
-            )
-            if dup:
+    @api.onchange("email", "mobile", "phone")
+    def _onchange_duplicate_contact(self):
+        """UI-only hint. Never blocks saving on its own."""
+        self.ensure_one()
+        for flag, field_name, label, finder in self._duplicate_checks():
+            msg = self._get_duplicate_message(flag, field_name, label, finder)
+            if msg:
                 return self._warning_message(
-                    "Duplicate Contact Detected",
-                    f"A contact with the same Email already exists: {dup.display_name}",
-                )
-
-        if (
-            self._get_config_param("smart_duplicate_detection.enable_mobile_check", True)
-            and self.mobile
-        ):
-            dup = self._find_duplicate_phone(
-                model_name="res.partner",
-                field_name="mobile",
-                raw_value=self.mobile,
-                current_id=self.id,
-                active_test=active_test,
-            )
-            if dup:
-                return self._warning_message(
-                    "Duplicate Contact Detected",
-                    f"A contact with the same Mobile already exists: {dup.display_name}",
-                )
-
-        if (
-            self._get_config_param("smart_duplicate_detection.enable_phone_check", True)
-            and self.phone
-        ):
-            dup = self._find_duplicate_phone(
-                model_name="res.partner",
-                field_name="phone",
-                raw_value=self.phone,
-                current_id=self.id,
-                active_test=active_test,
-            )
-            if dup:
-                return self._warning_message(
-                    "Duplicate Contact Detected",
-                    f"A contact with the same Phone already exists: {dup.display_name}",
+                    "Duplicate Contact Detected", msg
                 )
 
     @api.constrains("email", "mobile", "phone")
-    def _constrains_duplicate_contact(self):
-        """Hard block at save time — this actually prevents saving."""
-        ignore_archived = self._get_config_param(
-            "smart_duplicate_detection.ignore_archived_records", False
-        )
-        warning_only = self._get_config_param(
-            "smart_duplicate_detection.warning_only_mode", True
-        )
-
-        # If warning_only mode is ON, skip the hard block
-        if warning_only:
-            return
-
-        active_test = not ignore_archived
-
+    def _check_duplicate_contact(self):
+        """Real constraint: runs on create/write and actually blocks save
+        when warning-only mode is disabled."""
         for record in self:
-            if (
-                self._get_config_param("smart_duplicate_detection.enable_email_check", True)
-                and record.email
-            ):
-                dup = self._find_duplicate_email(
-                    model_name="res.partner",
-                    field_name="email",
-                    raw_value=record.email,
-                    current_id=record.id,
-                    active_test=active_test,
+            warning_only = record._get_config_param(
+                "smart_duplicate_detection.warning_only_mode", True
+            )
+            if warning_only:
+                continue
+            for flag, field_name, label, finder in record._duplicate_checks():
+                msg = record._get_duplicate_message(
+                    flag, field_name, label, finder
                 )
-                if dup:
-                    raise ValidationError(
-                        f"A contact with the same Email already exists: {dup.display_name}"
-                    )
-
-            if (
-                self._get_config_param("smart_duplicate_detection.enable_mobile_check", True)
-                and record.mobile
-            ):
-                dup = self._find_duplicate_phone(
-                    model_name="res.partner",
-                    field_name="mobile",
-                    raw_value=record.mobile,
-                    current_id=record.id,
-                    active_test=active_test,
-                )
-                if dup:
-                    raise ValidationError(
-                        f"A contact with the same Mobile already exists: {dup.display_name}"
-                    )
-
-            if (
-                self._get_config_param("smart_duplicate_detection.enable_phone_check", True)
-                and record.phone
-            ):
-                dup = self._find_duplicate_phone(
-                    model_name="res.partner",
-                    field_name="phone",
-                    raw_value=record.phone,
-                    current_id=record.id,
-                    active_test=active_test,
-                )
-                if dup:
-                    raise ValidationError(
-                        f"A contact with the same Phone already exists: {dup.display_name}"
-                    )
+                if msg:
+                    raise ValidationError(msg)
+                    
