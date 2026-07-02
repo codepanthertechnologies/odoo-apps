@@ -11,13 +11,6 @@ class ResConfigSettings(models.TransientModel):
         ),
     )
 
-    enable_mobile_check = fields.Boolean(
-        string="Enable Mobile Duplicate Check",
-        config_parameter=(
-            "smart_duplicate_detection.enable_mobile_check"
-        ),
-    )
-
     enable_phone_check = fields.Boolean(
         string="Enable Phone Duplicate Check",
         config_parameter=(

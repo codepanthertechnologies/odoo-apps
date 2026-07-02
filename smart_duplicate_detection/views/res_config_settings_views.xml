@@ -29,10 +29,6 @@
                             <field name="enable_email_check"/>
                         </setting>
 
-                        <setting string="Mobile Check">
-                            <field name="enable_mobile_check"/>
-                        </setting>
-
                         <setting string="Phone Check">
                             <field name="enable_phone_check"/>
                         </setting>

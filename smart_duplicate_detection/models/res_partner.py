@@ -5,7 +5,7 @@ from .duplicate_mixin import DuplicateDetectionMixin
 class ResPartner(DuplicateDetectionMixin, models.Model):
     _inherit = "res.partner"
 
-    @api.onchange("email", "mobile", "phone")
+    @api.onchange("email", "phone")
     def _onchange_duplicate_contact(self):
         self.ensure_one()
 
@@ -33,30 +33,6 @@ class ResPartner(DuplicateDetectionMixin, models.Model):
             if dup:
                 msg = (
                     f"A contact with the same Email already exists: "
-                    f"{dup.display_name}"
-                )
-                if warning_only:
-                    return self._warning_message(
-                        "Duplicate Contact Detected", msg
-                    )
-                else:
-                    from odoo.exceptions import ValidationError
-                    raise ValidationError(msg)
-
-        # --- Mobile ---
-        if self._get_config_param(
-            "smart_duplicate_detection.enable_mobile_check", True
-        ) and self.mobile:
-            dup = self._find_duplicate_phone(
-                model_name="res.partner",
-                field_name="mobile",
-                raw_value=self.mobile,
-                current_id=self.id,
-                active_test=active_test,
-            )
-            if dup:
-                msg = (
-                    f"A contact with the same Mobile already exists: "
                     f"{dup.display_name}"
                 )
                 if warning_only:
