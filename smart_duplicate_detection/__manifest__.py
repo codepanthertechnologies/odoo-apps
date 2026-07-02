@@ -23,7 +23,7 @@ Features:
 * Lightweight ORM queries
 * Production-ready architecture
     """,
-    "version": "18.0.1.0.0",
+    "version": "18.0.1.1.0",
     "category": "Tools",
     "license": "LGPL-3",
     "author": "Code Panther Technologies",
