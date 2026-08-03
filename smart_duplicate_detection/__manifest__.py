@@ -41,6 +41,8 @@ Features:
         "views/product_template_views.xml",
         "views/res_config_settings_views.xml",
     ],
+    "currency": "USD",
+    "price": 1.01,
     "installable": True,
     "application": False,
     "auto_install": False,
